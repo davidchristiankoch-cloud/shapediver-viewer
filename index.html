@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ShapeDiver Viewer v3 – Minimal Test</title>
-
+  <title>ShapeDiver Viewer v3 – Official Minimal Example</title>
   <style>
     html, body {
       margin: 0;
@@ -11,7 +10,6 @@
       height: 100%;
       overflow: hidden;
     }
-
     #viewer {
       width: 100vw;
       height: 100vh;
@@ -20,35 +18,43 @@
 </head>
 <body>
 
-  <div id="viewer"></div>
+<div id="viewer"></div>
 
-  <script type="module">
-    import { createSession } from "https://esm.sh/@shapediver/viewer@3.7.4";
+<script type="module">
+  import {
+    createSession,
+    createViewport
+  } from "https://esm.sh/@shapediver/viewer@3.7.4";
 
-    console.log("SD TEST: ESM loaded");
+  console.log("SD TEST: module loaded");
 
-    window.addEventListener("load", async () => {
-      const container = document.getElementById("viewer");
-      console.log("SD TEST: container", container);
+  window.addEventListener("load", async () => {
+    const container = document.getElementById("viewer");
+    console.log("SD TEST: container", container);
 
-      try {
-        const session = await createSession({
-          ticket: "ed8f586a8eafc5b40ca2b0dc3f0c0f09984432e3a0cce070b7886b5050f48457bb702f479721edcb90c7c8802da28dfb175f80018bf4910137e4122cfa32b416d3791eae40ba1c5cd3727aa6a56f9edffb740204511626c15ef2ab3ca02c4c3ff43eb3eb1ac674-88363555a1fcaa5093fbfdb41d5a2309",
-          modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com",
-          container
-        });
+    try {
+      const session = await createSession({
+        ticket: "ed8f586a8eafc5b40ca2b0dc3f0c0f09984432e3a0cce070b7886b5050f48457bb702f479721edcb90c7c8802da28dfb175f80018bf4910137e4122cfa32b416d3791eae40ba1c5cd3727aa6a56f9edffb740204511626c15ef2ab3ca02c4c3ff43eb3eb1ac674-88363555a1fcaa5093fbfdb41d5a2309",
+        modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com"
+      });
 
-        console.log("SD TEST: session created", session);
+      console.log("SD TEST: session created", session);
 
-        // IMPORTANT: v3 viewport is already created
-        await session.viewport.camera.fitToScene();
-        console.log("SD TEST: camera fit complete");
+      const viewport = await createViewport({
+        session,
+        container
+      });
 
-      } catch (err) {
-        console.error("SD TEST FAILED", err);
-      }
-    });
-  </script>
+      console.log("SD TEST: viewport created", viewport);
+
+      await viewport.camera.fitToScene();
+      console.log("SD TEST: camera fit");
+
+    } catch (err) {
+      console.error("SD TEST FAILED", err);
+    }
+  });
+</script>
 
 </body>
 </html>
