@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ShapeDiver Viewer v3 – Official Minimal Example</title>
+  <title>ShapeDiver Viewer v3 – Minimal Working</title>
   <style>
     html, body {
       margin: 0;
@@ -13,6 +13,7 @@
     #viewer {
       width: 100vw;
       height: 100vh;
+      position: relative; /* REQUIRED */
     }
   </style>
 </head>
@@ -40,15 +41,14 @@
 
       console.log("SD TEST: session created", session);
 
-      const viewport = await createViewport({
-        session,
-        container
+      requestAnimationFrame(async () => {
+        const viewport = await createViewport({
+          session,
+          container
+        });
+
+        console.log("SD TEST: viewport created", viewport);
       });
-
-      console.log("SD TEST: viewport created", viewport);
-
-      await viewport.camera.fitToScene();
-      console.log("SD TEST: camera fit");
 
     } catch (err) {
       console.error("SD TEST FAILED", err);
