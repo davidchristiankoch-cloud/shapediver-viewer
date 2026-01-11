@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>ShapeDiver v3 Minimal Test</title>
+
   <style>
     html, body {
       margin: 0;
@@ -10,13 +11,16 @@
       height: 100%;
       overflow: hidden;
     }
+
     #viewer {
       width: 100%;
       height: 100%;
-      background: #ddd;
+      position: relative;
+      background: #e0e0e0;
     }
   </style>
 </head>
+
 <body>
   <div id="viewer"></div>
 
@@ -26,29 +30,34 @@
       createViewport
     } from "https://esm.sh/@shapediver/viewer@3.7.4";
 
-    console.log("SD TEST: ESM loaded");
+    window.addEventListener("load", async () => {
+      console.log("SD TEST: window loaded");
 
-    const ticket =
-      "2a676cfde702983d5ca9b58fcab4319424a73cbf44e3d568685b9145619028764bbf12509c65a059f3c679b27c0be7292b1fd83bb30608bab6aa9a39615f8988e9efce8986adcb6c82a2a4c780e53a42d88e8a11872bbfc731cad63a4e77fd5cce549fbbe63402-eec7c28946fb0fc6d105ea6afb77dae6";
+      const ticket =
+        "2a676cfde702983d5ca9b58fcab4319424a73cbf44e3d568685b9145619028764bbf12509c65a059f3c679b27c0be7292b1fd83bb30608bab6aa9a39615f8988e9efce8986adcb6c82a2a4c780e53a42d88e8a11872bbfc731cad63a4e77fd5cce549fbbe63402-eec7c28946fb0fc6d105ea6afb77dae6";
 
-    try {
-      const session = await createSession({
-        ticket,
-        modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com"
-      });
+      try {
+        const container = document.getElementById("viewer");
+        console.log("SD TEST: container", container);
 
-      console.log("SD TEST: session created", session);
+        const session = await createSession({
+          ticket,
+          modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com"
+        });
 
-      const viewport = await createViewport({
-        container: document.getElementById("viewer"),
-        session
-      });
+        console.log("SD TEST: session created", session);
 
-      console.log("SD TEST: viewport created", viewport);
+        const viewport = await createViewport({
+          session,
+          container
+        });
 
-    } catch (err) {
-      console.error("SD TEST FAILED", err);
-    }
+        console.log("SD TEST: viewport created", viewport);
+
+      } catch (err) {
+        console.error("SD TEST FAILED", err);
+      }
+    });
   </script>
 </body>
 </html>
