@@ -14,10 +14,10 @@
 <body>
   <div id="viewer"></div>
 
-  <script type="module">
-    import Viewer from "https://cdn.jsdelivr.net/npm/@shapediver/viewer@3.7.4/dist/index.min.js";
+  <!-- ShapeDiver Viewer 3 UMD build -->
+  <script src="https://viewer.shapediver.com/v3/3.7.4/shapediver-viewer.min.js"></script>
 
-
+  <script>
     let viewer = null;
     let paramMap = {};
 
@@ -39,7 +39,7 @@
 
       paramMap = {};
 
-      viewer = new Viewer({
+      viewer = new SDV.Viewer({
         container: document.getElementById("viewer"),
         ticket: m.displayTicket,
         modelViewUrl: m.modelViewUrl || "https://sdeuc1.eu-central-1.shapediver.com"
