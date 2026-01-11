@@ -37,9 +37,11 @@
         container
       });
 
-      console.log("SD TEST: session + viewport created", session);
+      console.log("SD TEST: session created", session);
 
-      await session.viewport.camera.fitToScene();
+      const viewport = session.viewports.get()[0];
+      viewport.camera.fitToScene();
+
       console.log("SD TEST: camera fit");
 
     } catch (err) {
