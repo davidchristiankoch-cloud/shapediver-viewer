@@ -1,63 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>ShapeDiver v3 Minimal Test</title>
+<script type="module">
+  import { createSession } from "https://esm.sh/@shapediver/viewer@3.7.4";
 
-  <style>
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
+  console.log("SD TEST: ESM loaded");
 
-    #viewer {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      background: #e0e0e0;
-    }
-  </style>
-</head>
+  const ticket =
+    "2a676cfde702983d5ca9b58fcab4319424a73cbf44e3d568685b9145619028764bbf12509c65a059f3c679b27c0be7292b1fd83bb30608bab6aa9a39615f8988e9efce8986adcb6c82a2a4c780e53a42d88e8a11872bbfc731cad63a4e77fd5cce549fbbe63402-eec7c28946fb0fc6d105ea6afb77dae6";
 
-<body>
-  <div id="viewer"></div>
+  window.addEventListener("load", () => {
+    console.log("SD TEST: window loaded");
 
-  <script type="module">
-    import {
-      createSession,
-      createViewport
-    } from "https://esm.sh/@shapediver/viewer@3.7.4";
+    const container = document.getElementById("viewer");
+    console.log("SD TEST: container", container);
 
-    window.addEventListener("load", async () => {
-      console.log("SD TEST: window loaded");
+    // wait for layout + paint (CRITICAL)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(async () => {
+        try {
+          const session = await createSession({
+            ticket,
+            modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com",
+            container
+          });
 
-      const ticket =
-        "2a676cfde702983d5ca9b58fcab4319424a73cbf44e3d568685b9145619028764bbf12509c65a059f3c679b27c0be7292b1fd83bb30608bab6aa9a39615f8988e9efce8986adcb6c82a2a4c780e53a42d88e8a11872bbfc731cad63a4e77fd5cce549fbbe63402-eec7c28946fb0fc6d105ea6afb77dae6";
-
-      try {
-        const container = document.getElementById("viewer");
-        console.log("SD TEST: container", container);
-
-        const session = await createSession({
-          ticket,
-          modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com"
-        });
-
-        console.log("SD TEST: session created", session);
-
-        const viewport = await createViewport({
-          session,
-          container
-        });
-
-        console.log("SD TEST: viewport created", viewport);
-
-      } catch (err) {
-        console.error("SD TEST FAILED", err);
-      }
+          console.log("SD TEST: session created", session);
+        } catch (err) {
+          console.error("SD TEST FAILED", err);
+        }
+      });
     });
-  </script>
-</body>
-</html>
+  });
+</script>
