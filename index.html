@@ -13,6 +13,7 @@
     #viewer {
       width: 100%;
       height: 100%;
+      background: #ddd;
     }
   </style>
 </head>
@@ -20,9 +21,12 @@
   <div id="viewer"></div>
 
   <script type="module">
-    import { createSession } from "https://esm.sh/@shapediver/viewer@3.7.4";
+    import {
+      createSession,
+      createViewport
+    } from "https://esm.sh/@shapediver/viewer@3.7.4";
 
-    console.log("SD TEST: esm module loaded");
+    console.log("SD TEST: ESM loaded");
 
     const ticket =
       "2a676cfde702983d5ca9b58fcab4319424a73cbf44e3d568685b9145619028764bbf12509c65a059f3c679b27c0be7292b1fd83bb30608bab6aa9a39615f8988e9efce8986adcb6c82a2a4c780e53a42d88e8a11872bbfc731cad63a4e77fd5cce549fbbe63402-eec7c28946fb0fc6d105ea6afb77dae6";
@@ -30,13 +34,20 @@
     try {
       const session = await createSession({
         ticket,
-        modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com",
-        container: document.getElementById("viewer")
+        modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com"
       });
 
       console.log("SD TEST: session created", session);
+
+      const viewport = await createViewport({
+        container: document.getElementById("viewer"),
+        session
+      });
+
+      console.log("SD TEST: viewport created", viewport);
+
     } catch (err) {
-      console.error("SD TEST: session FAILED", err);
+      console.error("SD TEST FAILED", err);
     }
   </script>
 </body>
