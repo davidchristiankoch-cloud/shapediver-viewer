@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ShapeDiver v3 ESM Test</title>
+  <title>ShapeDiver v3 Minimal Test</title>
   <style>
     html, body {
       margin: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #111;
     }
     #viewer {
       width: 100%;
@@ -18,22 +17,26 @@
   </style>
 </head>
 <body>
+  <div id="viewer"></div>
 
-<div id="viewer"></div>
+  <script type="module">
+    import { createSession } from "https://cdn.jsdelivr.net/npm/@shapediver/viewer@3.7.4/dist/index.min.js";
 
-<script type="module">
-  import { Viewer } from "https://cdn.jsdelivr.net/npm/@shapediver/viewer@3.7.4/dist/index.js";
+    console.log("SD TEST: module loaded");
 
-  console.log("Viewer =", Viewer);
+    const ticket = "2e46a15877f39b7492eda72f0ca02bdce2a7590be571398bd1a4eb7d087dccaaf2a9883d6aa3024133d2c9f1cc2377bb07f54f030e81c9ceff723b6e42b1fa24a63b4e588ac23da69a80ff3831cd911aff20529e6487091e9dcc9e22ecae80ca394257e5ccab37-4ca774161aba38a676bc81b81e3ac57f";
 
-  const viewer = new Viewer({
-    container: document.getElementById("viewer"),
-    ticket: "2e46a15877f39b7492eda72f0ca02bdce2a7590be571398bd1a4eb7d087dccaaf2a9883d6aa3024133d2c9f1cc2377bb07f54f030e81c9ceff723b6e42b1fa24a63b4e588ac23da69a80ff3831cd911aff20529e6487091e9dcc9e22ecae80ca394257e5ccab37-4ca774161aba38a676bc81b81e3ac57f",
-    modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com"
-  });
+    try {
+      const session = await createSession({
+        ticket,
+        modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com",
+        container: document.getElementById("viewer")
+      });
 
-  console.log("Viewer constructed");
-</script>
-
+      console.log("SD TEST: session created", session);
+    } catch (err) {
+      console.error("SD TEST: session FAILED", err);
+    }
+  </script>
 </body>
 </html>
