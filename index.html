@@ -1,32 +1,58 @@
-<script type="module">
-  import { createSession } from "https://esm.sh/@shapediver/viewer@3.7.4";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ShapeDiver v3 Minimal Test</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    #viewer {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
 
-  console.log("SD TEST: ESM loaded");
+  <div id="viewer"></div>
 
-  const ticket =
-    "2a676cfde702983d5ca9b58fcab4319424a73cbf44e3d568685b9145619028764bbf12509c65a059f3c679b27c0be7292b1fd83bb30608bab6aa9a39615f8988e9efce8986adcb6c82a2a4c780e53a42d88e8a11872bbfc731cad63a4e77fd5cce549fbbe63402-eec7c28946fb0fc6d105ea6afb77dae6";
+  <script type="module">
+    import { createSession } from "https://esm.sh/@shapediver/viewer@3.7.4";
 
-  window.addEventListener("load", () => {
-    console.log("SD TEST: window loaded");
+    console.log("SD TEST: ESM loaded");
 
-    const container = document.getElementById("viewer");
-    console.log("SD TEST: container", container);
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("SD TEST: DOMContentLoaded");
 
-    // wait for layout + paint (CRITICAL)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(async () => {
-        try {
-          const session = await createSession({
-            ticket,
-            modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com",
-            container
-          });
+      const container = document.getElementById("viewer");
+      console.log("SD TEST: container", container);
 
-          console.log("SD TEST: session created", session);
-        } catch (err) {
-          console.error("SD TEST FAILED", err);
-        }
+      if (!container) {
+        console.error("SD TEST FAILED: viewer container not found");
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(async () => {
+          try {
+            const session = await createSession({
+              ticket: "2a676cfde702983d5ca9b58fcab4319424a73cbf44e3d568685b9145619028764bbf12509c65a059f3c679b27c0be7292b1fd83bb30608bab6aa9a39615f8988e9efce8986adcb6c82a2a4c780e53a42d88e8a11872bbfc731cad63a4e77fd5cce549fbbe63402-eec7c28946fb0fc6d105ea6afb77dae6",
+              modelViewUrl: "https://sdeuc1.eu-central-1.shapediver.com",
+              container
+            });
+
+            console.log("SD TEST: session created", session);
+          } catch (err) {
+            console.error("SD TEST FAILED", err);
+          }
+        });
       });
     });
-  });
-</script>
+  </script>
+
+</body>
+</html>
