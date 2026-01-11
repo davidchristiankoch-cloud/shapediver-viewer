@@ -62,6 +62,8 @@
       viewer.session.parameters.updateAsync([
         { id, value: m.value }
       ]);
+     window.parent.postMessage({ type: "VIEWER_READY" }, "*");
+ 
     });
   </script>
 </body>
