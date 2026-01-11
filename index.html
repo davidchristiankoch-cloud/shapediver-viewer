@@ -3,53 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <style>
-    html, body, #viewer { margin:0; width:100%; height:100%; overflow:hidden; }
+    html, body, #viewer {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
   <div id="viewer"></div>
 
   <script type="module">
-    import {
-      createSession,
-      createViewport
-    } from "https://cdn.jsdelivr.net/npm/@shapediver/viewer@3.7.4/dist/index.min.js";
+    import { Viewer } from "https://cdn.jsdelivr.net/npm/@shapediver/viewer@3.7.4/dist/index.min.js";
 
-    let session = null;
+    let viewer = null;
     let paramMap = {};
 
     function norm(s) {
-      return String(s).toLowerCase().replace(/\s+/g,"").replace(/[^a-z0-9]/g,"");
+      return String(s)
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/[^a-z0-9]/g, "");
     }
 
     window.addEventListener("message", async (e) => {
       const m = e.data;
       if (m.type !== "INIT_MODEL") return;
 
-      if (session) session.close();
+      if (viewer) {
+        viewer.close();
+        viewer = null;
+      }
 
       paramMap = {};
 
-      session = await createSession({
+      viewer = new Viewer({
+        container: document.getElementById("viewer"),
         ticket: m.displayTicket,
         modelViewUrl: m.modelViewUrl || "https://sdeuc1.eu-central-1.shapediver.com"
       });
 
-      session.parameters.get().then(p => {
-        p.data.forEach(param => {
-          paramMap[norm(param.name)] = param.id;
+      viewer.session.parameters.get().then(res => {
+        res.data.forEach(p => {
+          paramMap[norm(p.name)] = p.id;
         });
       });
     });
 
     window.addEventListener("message", (e) => {
       const m = e.data;
-      if (m.action !== "updateParam" || !session) return;
+      if (m.action !== "updateParam" || !viewer) return;
 
       const id = paramMap[norm(m.sliderId)];
       if (!id) return;
 
-      session.parameters.updateAsync([{ id, value: m.value }]);
+      viewer.session.parameters.updateAsync([
+        { id, value: m.value }
+      ]);
     });
   </script>
 </body>
