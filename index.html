@@ -8,16 +8,19 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
+      background: #000;
     }
   </style>
 </head>
 <body>
   <div id="viewer"></div>
 
-  <!-- ShapeDiver Viewer 3 UMD build -->
+  <!-- ShapeDiver Viewer 3 UMD -->
   <script src="https://viewer.shapediver.com/v3/3.7.4/shapediver-viewer.min.js"></script>
 
   <script>
+    console.log("SD: script loaded");
+
     let viewer = null;
     let paramMap = {};
 
@@ -28,42 +31,82 @@
         .replace(/[^a-z0-9]/g, "");
     }
 
+    // Tell Wix we exist
+    window.parent.postMessage({ type: "VIEWER_READY" }, "*");
+    console.log("SD: VIEWER_READY sent");
+
     window.addEventListener("message", async (e) => {
+      console.log("SD: message received", e.data);
+
       const m = e.data;
       if (m.type !== "INIT_MODEL") return;
 
+      console.log("SD: INIT_MODEL received");
+
+      if (!m.displayTicket) {
+        console.error("SD: missing displayTicket");
+        return;
+      }
+
       if (viewer) {
+        console.log("SD: closing existing viewer");
         viewer.close();
         viewer = null;
       }
 
       paramMap = {};
 
-      viewer = new SDV.Viewer({
-        container: document.getElementById("viewer"),
-        ticket: m.displayTicket,
-        modelViewUrl: m.modelViewUrl || "https://sdeuc1.eu-central-1.shapediver.com"
-      });
+      console.log("SD: creating viewer");
 
-      viewer.session.parameters.get().then(res => {
+      try {
+        viewer = new SDV.Viewer({
+          container: document.getElementById("viewer"),
+          ticket: m.displayTicket,
+          modelViewUrl: m.modelViewUrl || "https://sdeuc1.eu-central-1.shapediver.com"
+        });
+      } catch (err) {
+        console.error("SD: Viewer constructor failed", err);
+        return;
+      }
+
+      console.log("SD: viewer created");
+
+      try {
+        const res = await viewer.session.parameters.get();
+        console.log("SD: parameters received", res.data);
+
         res.data.forEach(p => {
           paramMap[norm(p.name)] = p.id;
         });
-      });
+
+        console.log("SD: paramMap", paramMap);
+      } catch (err) {
+        console.error("SD: parameter fetch failed", err);
+      }
     });
 
     window.addEventListener("message", (e) => {
       const m = e.data;
-      if (m.action !== "updateParam" || !viewer) return;
+      if (m.action !== "updateParam") return;
+
+      console.log("SD: updateParam", m);
+
+      if (!viewer) {
+        console.warn("SD: viewer not ready");
+        return;
+      }
 
       const id = paramMap[norm(m.sliderId)];
-      if (!id) return;
+      if (!id) {
+        console.warn("SD: param not found", m.sliderId);
+        return;
+      }
 
       viewer.session.parameters.updateAsync([
         { id, value: m.value }
-      ]);
-     window.parent.postMessage({ type: "VIEWER_READY" }, "*");
- 
+      ]).catch(err => {
+        console.error("SD: updateAsync failed", err);
+      });
     });
   </script>
 </body>
