@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8" />
   <title>ShapeDiver v3 Minimal Test</title>
@@ -20,11 +20,12 @@
   <div id="viewer"></div>
 
   <script type="module">
-    import { createSession } from "https://cdn.jsdelivr.net/npm/@shapediver/viewer@3.7.4/dist/index.min.js";
+    import { createSession } from "https://esm.sh/@shapediver/viewer@3.7.4";
 
-    console.log("SD TEST: module loaded");
+    console.log("SD TEST: esm module loaded");
 
-    const ticket = "2e46a15877f39b7492eda72f0ca02bdce2a7590be571398bd1a4eb7d087dccaaf2a9883d6aa3024133d2c9f1cc2377bb07f54f030e81c9ceff723b6e42b1fa24a63b4e588ac23da69a80ff3831cd911aff20529e6487091e9dcc9e22ecae80ca394257e5ccab37-4ca774161aba38a676bc81b81e3ac57f";
+    const ticket =
+      "2e46a15877f39b7492eda72f0ca02bdce2a7590be571398bd1a4eb7d087dccaaf2a9883d6aa3024133d2c9f1cc2377bb07f54f030e81c9ceff723b6e42b1fa24a63b4e588ac23da69a80ff3831cd911aff20529e6487091e9dcc9e22ecae80ca394257e5ccab37-4ca774161aba38a676bc81b81e3ac57f";
 
     try {
       const session = await createSession({
